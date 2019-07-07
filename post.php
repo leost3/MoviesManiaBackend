@@ -1,30 +1,25 @@
 <?php
+require_once "classes/User.php";
 
 /* header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
  */
-// $data = json_decode(file_get_contents('php://input'), true);
-// print_r($data);
-// print_r($_POST);
 
-/* if($_SERVER['REQUEST_METHOD']==='POST'/*  && empty($_POST) ) {
-    $_POST = json_decode(file_get_contents('http://php://input'));
-    print_r($_POST);
-} */
+//$entityBody = file_get_contents('php://input');
+//var_dump($_REQUEST);die;
+$method = $_SERVER['REQUEST_METHOD'];
+
+//echo $method;
+// var_dump($username,123);die;
+$username = $_POST['username'];
+$password = $_POST['password'];
 
 
-if (isset($_POST)) {
-    // header("HTTP/1.1 200 success");
-    // $resfponse['status'] = 200;
-    // $response['status_message'] = "success";
-    // $response['data'] = "Hi from PHP!";
-    echo "listened from fontend";
-    $resp = $_POST["data"];
-    echo $resp;
-}
-//$_POST['variable_name'];
+$result = User::Login($username, $password);
 
-//$_POST["name"]
-?>
+header('Content-Type: application/json');
+
+echo json_encode(["result" => $result ]);
+
 
