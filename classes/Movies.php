@@ -62,19 +62,18 @@ class Movie{
 		}	
 	}
 
-	public function InsertIntoMovies($movieId, $totalRatings = 0, $num_of_ratings = 0, $userRate){
+	public function ReadMovieAvg($movieId){
 		try{
 
 			self::Init_Database();
 			
-			$num_of_ratings = intval($num_of_ratings) + 1;
-			$query = "UPDATE `movie` SET `totalRatings`=$totalRatings + $userRate,`num_of_ratings`=$num_of_ratings WHERE id = $movieId";
+			$query = "SELECT  AVG(movie_rating) from `movie_rating` WHERE movie_id = $movieId";
 					
 		    $connection = self::$database->Get_Connection();
 			$statement  = $connection->prepare($query);
 			$statement->execute();
-
-			return $num_of_ratings;
+			$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $result[0];
 		}catch(PDOException $e){
 			echo "INSERT Query Failed : ".$e->getMessage();
 		}	
@@ -116,10 +115,10 @@ class Movie{
 	}
 	
 
-	public static function ReadMovieRatingsByUserId(){
+	public static function ReadMovieRatingsByUserId($userId, $movieId){
 		try{
 			self::Init_Database();
-			$query = "SELECT * FROM movie where id = $ID";
+			$query = "SELECT * FROM movie_rating where `user_id` = $userId AND `movie_id` = $movieId ";
 
 		    $connection = self::$database->Get_Connection();
 			$statement  = $connection->prepare($query);
@@ -146,17 +145,6 @@ class Movie{
 			$statement->bindParam(2, $movieId);
 			$statement->bindParam(3, $movieRating);
 			$statement->execute();
-			// -------------------------------------------------
-			// Returns current values of totalRatings, num_of_ratings from table movie 
-			self::Init_Database();
-			$query1 = "SELECT totalRatings, num_of_ratings from  movie where id = $movieId";
-			$connection = self::$database->Get_Connection();
-			$statement  = $connection->prepare($query1);
-			$statement->execute();
-			
-			$result = $statement->fetchAll(PDO::FETCH_ASSOC);
-			
-			return $result;
 		}catch(PDOException $e){
 			echo "INSERT Query Failed : ".$e->getMessage();
 		}	

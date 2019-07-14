@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     switch ($action) {
         case 'login':
             $result = User::Login($username, $password); // true
-            echo json_encode(["result" => $result]);
             break;
         case 'register':
             $firstName = $data['firstName'];
@@ -21,31 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $email = $data['email'];
             $userObj = new User($firstName, $lastName, $email, $username, $password, 2);
             $userObj->Insert();
-            echo json_encode(["registration" => "created"]);
+            $result = "Created";
             break;
         case 'rating':
             echo json_enconde('rated');
-    }
-    // echo json_encode($data['data']);
-}else {
-    echo "isso eh um get";
+        }
+        echo json_encode(["result" => $result]);
 }
 
-
-
-// $action = $_POST['action'];
-
-
-// $result = [];
-// switch ($action) {
-//     case 'login':
-//         $username = $_POST['username'];
-//         $password = $_POST['password'];
-
-//         $result = User::Login($username, $password);
-//     break;
-// }
-
-// header('Content-Type: application/json');
-
-// echo json_encode(["result" => $_POST["action"] ]);
