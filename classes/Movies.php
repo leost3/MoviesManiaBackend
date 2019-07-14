@@ -4,15 +4,16 @@ require_once "Database.php";
 class Movie{
 	private static $database;
 	
-	// // private $ID;
+	private $ID;
 	// private $totalRatings;
 	// private $num_of_ratings;
 	
-	// function Movie($totalRatings = NULL, $num_of_ratings = NULL ){
-	// 	// $this->ID = $ID;
-	// 	$this->totalRatings = $totalRatings;
-	// 	$this->num_of_ratings = $num_of_ratings;
-	// }
+	function Movie($ID, $Title, $totalRatings = NULL, $num_of_ratings = NULL) {
+		$this->ID = $ID;
+		$this->Title = $Title;
+		$this->totalRatings = $totalRatings;
+		$this->num_of_ratings = $num_of_ratings;
+	}
 	
 	public static function Init_Database(){
 		if(!isset(self::$database)){
@@ -43,13 +44,31 @@ class Movie{
 		}
 	}
 
-	public function InsertIntoMovies($movieId, $totalRatings, $num_of_ratings, $userRate){
+	public function Insert(){
 		try{
 			self::Init_Database();
+			$query = "INSERT INTO movie (id, title,	totalRatings, num_of_ratings)";
+			$query .= " VALUES(?,?,?,?)";
+		    $connection = self::$database->Get_Connection();
+			$statement  = $connection->prepare($query);
+			$statement->bindParam(1, $this->ID);
+			$statement->bindParam(2, $this->Title);
+			$statement->bindParam(3, $this->totalRatings);
+			$statement->bindParam(4, $this->num_of_ratings);
+			$statement->execute();
+			// echo "User inserted ID = ".$connection->lastInsertId();
+		}catch(PDOException $e){
+			echo "INSERT Query Failed : ".$e->getMessage();
+		}	
+	}
 
-			// $num_of_ratings = $num_of_ratings = 1
+	public function InsertIntoMovies($movieId, $totalRatings = 0, $num_of_ratings = 0, $userRate){
+		try{
+
+			self::Init_Database();
+			
+			$num_of_ratings = intval($num_of_ratings) + 1;
 			$query = "UPDATE `movie` SET `totalRatings`=$totalRatings + $userRate,`num_of_ratings`=$num_of_ratings WHERE id = $movieId";
-			// $query = "SELECT * movie";
 					
 		    $connection = self::$database->Get_Connection();
 			$statement  = $connection->prepare($query);
@@ -116,16 +135,19 @@ class Movie{
 	}
 	public static function rateMovieByUserID($userId, $movieId, $movieRating){
 		try{
-			// self::Init_Database();
-			// $query = "INSERT INTO movie_rating (user_id, movie_id, movie_rating)";
-			// $query .= " VALUES(?,?,?)";
-		    // $connection = self::$database->Get_Connection();
-			// $statement  = $connection->prepare($query);
-			// $statement->bindParam(1, $userId);
-			// $statement->bindParam(2, $movieId);
-			// $statement->bindParam(3, $movieRating);
-			// $statement->execute();
+
+			// insert userid, movieid and user rate from frontend
+			self::Init_Database();
+			$query = "INSERT INTO movie_rating (user_id, movie_id, movie_rating)";
+			$query .= " VALUES(?,?,?)";
+		    $connection = self::$database->Get_Connection();
+			$statement  = $connection->prepare($query);
+			$statement->bindParam(1, $userId);
+			$statement->bindParam(2, $movieId);
+			$statement->bindParam(3, $movieRating);
+			$statement->execute();
 			// -------------------------------------------------
+			// Returns current values of totalRatings, num_of_ratings from table movie 
 			self::Init_Database();
 			$query1 = "SELECT totalRatings, num_of_ratings from  movie where id = $movieId";
 			$connection = self::$database->Get_Connection();
