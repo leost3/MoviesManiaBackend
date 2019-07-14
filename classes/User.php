@@ -73,14 +73,10 @@ class User{
 			
 			$result = $statement->fetch(PDO::FETCH_ASSOC);
 			//print_r($result);
-		
-			
 			if(!empty($result['User_ID'])){
 				return true;
 			}
-	
 			return false;
-			
 		}catch(PDOException $e){
 			echo "INSERT Query Failed : ".$e->getMessage();
 		}	
@@ -129,11 +125,12 @@ class User{
 			echo "INSERT Query Failed : ".$e->getMessage();
 		}	
 	}
+
 	public static function Login($username , $password){
 		try{
 			self::Init_Database();
 			$query = "SELECT * FROM users WHERE Username = '$username'";
-		
+		    
 		    $connection = self::$database->Get_Connection();
 			$statement  = $connection->prepare($query);
 			$statement->execute();
@@ -144,7 +141,8 @@ class User{
 			$encrypted_password = crypt($password, $salt);
 
 			if($encrypted_password ==  $result["Password"]){// compares salt with password
-				return true;
+				// return true;
+				return ["isLoggedIn" => true, "username" => $result["Username"], "userId" => $result["User_ID"]];
 			}
 			return false;
 			
@@ -152,6 +150,31 @@ class User{
 			echo "INSERT Query Failed : ".$e->getMessage();
 		}	
 	}
+	//----------------------------------------------------------------------
+
+	// public static function RetriveInfo($username , $password){
+	// 	try{
+	// 		self::Init_Database();
+	// 		$query = "SELECT * FROM users WHERE Username = '$username'";
+		
+	// 	    $connection = self::$database->Get_Connection();
+	// 		$statement  = $connection->prepare($query);
+	// 		$statement->execute();
+			
+	// 		$result = $statement->fetch(PDO::FETCH_ASSOC);
+			
+	// 		$salt = $result['Salt'];
+	// 		$encrypted_password = crypt($password, $salt);
+
+	// 		if($encrypted_password ==  $result["Password"]){// compares salt with password
+	// 			return true;
+	// 		}
+	// 		return false;
+			
+	// 	}catch(PDOException $e){
+	// 		echo "INSERT Query Failed : ".$e->getMessage();
+	// 	}	
+	// }
 
 	public static function Update_Password($username, $password){
 		try {
@@ -163,7 +186,6 @@ class User{
 			self::Init_Database();
 			$connection = self::$database->Get_Connection();
 			$connection->exec($query); //No need to prepare the query - only to get object statement or read data using fetch
-
 		} catch (PDOException $e) {
 			echo "Update query Failed: ".$e->getMessage();
 		}

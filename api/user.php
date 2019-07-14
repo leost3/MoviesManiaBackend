@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     switch ($action) {
         case 'login':
             $result = User::Login($username, $password); // true
-            echo json_encode(["isLoggedIn" => $result]);
+            echo json_encode(["result" => $result]);
             break;
         case 'register':
             $firstName = $data['firstName'];
@@ -23,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $userObj->Insert();
             echo json_encode(["registration" => "created"]);
             break;
-}
+        case 'rating':
+            echo json_enconde('rated');
+    }
     // echo json_encode($data['data']);
 }else {
     echo "isso eh um get";
