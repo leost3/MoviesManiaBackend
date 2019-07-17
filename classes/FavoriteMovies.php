@@ -1,48 +1,65 @@
 <?php 
 require_once "Database.php";
 
-class Movie{
+class FavoriteMovies{
 	private static $database;
 	
-	private $ID;
-	// private $totalRatings;
-	// private $num_of_ratings;
-	
-	function Movie($ID, $Title, $totalRatings = NULL, $num_of_ratings = NULL) {
-		$this->ID = $ID;
-		$this->Title = $Title;
-		$this->totalRatings = $totalRatings;
-		$this->num_of_ratings = $num_of_ratings;
-	}
 	
 	public static function Init_Database(){
 		if(!isset(self::$database)){
 			self::$database = new Database();
 		}
 	}
-	
-	public function Create(){
-		$database = Database::Get_Instance();
-		$connection = $database->Get_Connection();
-		// self::init_database();
-		// $connection = self::$database->GetConnection();
+
+	public static function InsertFavoriteMovie($movieId, $userId, $moviePosterPath, $movieTitle){
 		try{
-			$query  = "INSERT INTO movie (ID, Title, Avg_rating) ";
-			$query .= " VALUES(?, ?, ?, ?, ?, ?, ?, ? )";
-		
-			$stmt = $connection->prepare($query);
-			$stmt->bindParam(1,$this->ID);
-			$stmt->bindParam(2,$this->Title);
-			$stmt->bindParam(3,$this->Avg_rating);
-		
-			$stmt->execute();
-			
-			return $connection-> lastInsertId();
-			
+
+			// insert userid, movieid and user rate from frontend
+			self::Init_Database();
+			$query = "INSERT INTO favoritemovies (movieId, userId, moviePosterPath, movieTitle)";
+			$query .= " VALUES(?,?,?,?)";
+		    $connection = self::$database->Get_Connection();
+			$statement  = $connection->prepare($query);
+			$statement->bindParam(1, $movieId);
+			$statement->bindParam(2, $userId);
+			$statement->bindParam(3, $moviePosterPath);
+			$statement->bindParam(4, $movieTitle);
+			$statement->execute();
 		}catch(PDOException $e){
-			echo "Query Failed ".  $e->getMessage();
-		}
+			echo "INSERT Query Failed : ".$e->getMessage();
+		}	
+	// }
+	// 	try{
+	// 		self::Init_Database();
+	// 		// $query = "INSERT INTO `favoritemovies` (movieId, userId,	moviePosterPath, movieTitle)";
+	// 		// $query .= " VALUES($movieId, $userId, $moviePosterPath, $movieTitle)";
+
+	// 		// $query = "INSERT INTO `favoritemovies`(`movieId`, `userId`, `moviePosterPath`, `movieTitle`) VALUES (1,2,'asd','asd')";
+	// 		$query = "INSERT INTO favoritemovies(`movieId`, `userId`, `moviePosterPath`, `movieTitle`) VALUES (".$movieId.",".$userId.",".$moviePosterPath.",".$movieTitle.")";
+
+	// 	    $connection = self::$database->Get_Connection();
+	// 		$statement  = $connection->prepare($query);
+	// 		// $statement->bindParam(1, $userId);
+	// 		// $statement->bindParam(2, $movieId);
+	// 		// $statement->bindParam(3, $movieRating);
+	// 		$statement->execute();
+	// 	}catch(PDOException $e){
+	// 		echo "INSERT Query Failed : ".$e->getMessage();
+	// 	}	
 	}
+	
+	// public function InsertFavoriteMovie($movieId, $userId, $moviePosterPath, $movieTitle){
+
+	// 	try{
+	// 		self::Init_Database();
+	// 		$query  = "INSERT INTO favoritemovies (movieId, userId,	moviePosterPath, movieTitle) ";
+	// 		$query .= " VALUES($movieId, $userId, $moviePosterPath, $movieTitle)";
+	// 		$stmt = $connection->prepare($query);
+	// 		$stmt->execute();					
+	// 	}catch(PDOException $e){
+	// 		echo "Query Failed ".  $e->getMessage();
+	// 	}
+	// }
 
 	public function Insert(){
 		try{
@@ -132,24 +149,5 @@ class Movie{
 			echo "INSERT Query Failed : ".$e->getMessage();
 		}	
 	}
-	public static function rateMovieByUserID($userId, $movieId, $movieRating){
-		try{
-
-			// insert userid, movieid and user rate from frontend
-			self::Init_Database();
-			$query = "INSERT INTO movie_rating (user_id, movie_id, movie_rating)";
-			$query .= " VALUES(?,?,?)";
-		    $connection = self::$database->Get_Connection();
-			$statement  = $connection->prepare($query);
-			$statement->bindParam(1, $userId);
-			$statement->bindParam(2, $movieId);
-			$statement->bindParam(3, $movieRating);
-			$statement->execute();
-		}catch(PDOException $e){
-			echo "INSERT Query Failed : ".$e->getMessage();
-		}	
-	}
-	
-
 }
 ?>

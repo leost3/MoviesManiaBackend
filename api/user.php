@@ -12,7 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     switch ($action) {
         case 'login':
-            $result = User::Login($username, $password); // true
+            $login = User::Login($username, $password); // true
+            $result = $login;
             break;
         case 'register':
             $firstName = $data['firstName'];
