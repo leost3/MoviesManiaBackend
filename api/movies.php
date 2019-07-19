@@ -1,7 +1,7 @@
 <?php
 
 require_once "../classes/Movies.php";
-require_once "../classes/FavoriteMovies.php";
+require_once "../classes/Favorites.php";
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -53,8 +53,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             FavoriteMovies::InsertFavoriteMovie($movieId, $userId, $moviePosterPath, $movieTitle);
             // $result = "Movie $movieId inserted";
             $result = [$movieId, $userId, $moviePosterPath, $movieTitle];
+            break;
         }   
         
         echo json_encode(["result" => $result]);
     // echo json_encode(["result" => $movieObj]);
 }
+
+// public static function InsertFavoriteMovie($movieId, $userId, $moviePosterPath, $movieTitle){
+//     try{
+//         // insert userid, movieid and user rate from frontend
+//         self::Init_Database();
+//         $query = "INSERT INTO favoritemovies (movieId, userId, moviePosterPath, movieTitle)";
+//         $query .= " VALUES(?,?,?,?)";
+//         $connection = self::$database->Get_Connection();
+//         $statement  = $connection->prepare($query);
+//         $statement->bindParam(1, $movieId);
+//         $statement->bindParam(2, $userId);
+//         $statement->bindParam(3, $moviePosterPath);
+//         $statement->bindParam(4, $movieTitle);
+//         $statement->execute();
+//     }catch(PDOException $e){
+//         echo "INSERT Query Failed : ".$e->getMessage();
+//     }	
+// }
