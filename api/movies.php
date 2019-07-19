@@ -54,6 +54,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // $result = "Movie $movieId inserted";
             $result = [$movieId, $userId, $moviePosterPath, $movieTitle];
             break;
+        case "getFavorites":
+            $userId = $data["userId"];
+            $favorites = FavoriteMovies::ReadFavoriteMoviesbyId($userId);
+            $result = $favorites;
+            break;
+        case "removeFromFavorites":
+            $userId = $data["userId"];
+            $movieId = $data['movieId'];
+
+            FavoriteMovies::Delete_Favorite($userId, $movieId);
+            $result = [$userId, $movieId];
+            break;
         }   
         
         echo json_encode(["result" => $result]);
