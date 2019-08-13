@@ -2,7 +2,7 @@
 $USERNAME = 'root';
 $PASSWORD = '';
 $HOST = 'localhost';
-$DB = 'cars_db';
+$DB = 'movies_db';
 
 class Database{
 	private $Connection;

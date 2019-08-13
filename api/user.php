@@ -7,14 +7,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     $result = [];
     $action = $data['action'];
-    $username = $data['username'];
-    $password = $data['password'];
+    $username = $data['username']; // sa
+    $password = $data['password']; // sa
 
     switch ($action) {
+        
         case 'login':
-            $login = User::Login($username, $password); // true
-            $result = $login;
-            break;
+            $result = User::Login($username, $password); // true/false
+            break;        
         case 'register':
             $firstName = $data['firstName'];
             $lastName = $data['lastName'];

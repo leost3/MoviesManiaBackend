@@ -51,12 +51,26 @@ class FavoriteMovies{
     public static function Delete_Favorite($userId, $movieId){
 	
         try{
-
 			self::Init_Database();
 			$query = "DELETE FROM favoritemovies where userId = $userId AND movieId = $movieId";
 		    $connection = self::$database->Get_Connection();
 			$statement  = $connection->prepare($query);
 			$statement->execute();
+		}catch(PDOException $e){
+			echo "INSERT Query Failed : ".$e->getMessage();
+		}	
+	}
+    public static function isFavorite($movieId){
+	
+        try{
+
+			self::Init_Database();
+			$query = "SELECT * FROM favoritemovies where movieId = $movieId";
+		    $connection = self::$database->Get_Connection();
+			$statement  = $connection->prepare($query);
+			$statement->execute();
+			$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $result;
 		}catch(PDOException $e){
 			echo "INSERT Query Failed : ".$e->getMessage();
 		}	

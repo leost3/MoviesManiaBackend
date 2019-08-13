@@ -68,7 +68,6 @@ class Movie{
 			self::Init_Database();
 			
 			$query = "SELECT  AVG(movie_rating) from `movie_rating` WHERE movie_id = $movieId";
-					
 		    $connection = self::$database->Get_Connection();
 			$statement  = $connection->prepare($query);
 			$statement->execute();

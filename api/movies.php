@@ -62,9 +62,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         case "removeFromFavorites":
             $userId = $data["userId"];
             $movieId = $data['movieId'];
-
             FavoriteMovies::Delete_Favorite($userId, $movieId);
             $result = [$userId, $movieId];
+            break;
+        case "isFavorite":
+            $movieId = $data['movieId'];
+            $isFavorite = FavoriteMovies::isFavorite($movieId);
+            if (empty($isFavorite)) {
+                $result = FALSE;
+            }else {
+                $result = TRUE;
+            }
             break;
         }   
         

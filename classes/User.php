@@ -150,31 +150,27 @@ class User{
 			echo "INSERT Query Failed : ".$e->getMessage();
 		}	
 	}
-	//----------------------------------------------------------------------
+	public static function Validate($username){
+		try{
+			self::Init_Database();
+			$query = "SELECT Username FROM users WHERE Username = '$username'";
+		    
+		    $connection = self::$database->Get_Connection();
+			$statement  = $connection->prepare($query);
+			$statement->execute();
+			
+			$result = $statement->fetch(PDO::FETCH_ASSOC);
+			
+			if ($result['Username'] == $username) {
+				return TRUE;
+			}
+			return FALSE;
+						
+		}catch(PDOException $e){
+			echo "INSERT Query Failed : ".$e->getMessage();
+		}	
+	}
 
-	// public static function RetriveInfo($username , $password){
-	// 	try{
-	// 		self::Init_Database();
-	// 		$query = "SELECT * FROM users WHERE Username = '$username'";
-		
-	// 	    $connection = self::$database->Get_Connection();
-	// 		$statement  = $connection->prepare($query);
-	// 		$statement->execute();
-			
-	// 		$result = $statement->fetch(PDO::FETCH_ASSOC);
-			
-	// 		$salt = $result['Salt'];
-	// 		$encrypted_password = crypt($password, $salt);
-
-	// 		if($encrypted_password ==  $result["Password"]){// compares salt with password
-	// 			return true;
-	// 		}
-	// 		return false;
-			
-	// 	}catch(PDOException $e){
-	// 		echo "INSERT Query Failed : ".$e->getMessage();
-	// 	}	
-	// }
 
 	public static function Update_Password($username, $password){
 		try {
